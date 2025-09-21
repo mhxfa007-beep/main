@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from typing import Optional, Tuple
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status
-from ..models.user_models import User, RefreshToken, UserRole, AuthProvider
+from ..models.user_models import User, RefreshToken, UserRole, AuthProvider, UserRating
 from ..models.user_schemas import UserCreate, LoginRequest, UserResponse
 from ..repositories.user_repository import UserRepository
 from ..utils.auth_utils import hash_password, verify_password, create_access_token, create_refresh_token
@@ -133,3 +133,42 @@ class AuthService:
         
         self.user_repo.create_refresh_token(db, user.id, refresh_token, expires_at)
         return refresh_token
+    
+    def calculate_profile_completion(self, user: User) -> int:
+        """Calculate profile completion percentage."""
+        fields_to_check = [
+            'full_name', 'phone', 'location', 'bio', 'avatar_url'
+        ]
+        
+        completed_fields = 0
+        total_fields = len(fields_to_check)
+        
+        for field in fields_to_check:
+            if getattr(user, field, None):
+                completed_fields += 1
+        
+        # Add bonus for business users with company info
+        if user.role == UserRole.BUSINESS:
+            business_fields = ['company_name', 'company_org_number', 'company_address']
+            for field in business_fields:
+                if getattr(user, field, None):
+                    completed_fields += 0.5
+            total_fields += 1.5
+        
+        return int((completed_fields / total_fields) * 100)
+    
+    def update_user_rating(self, db: Session, user_id: int):
+        """Update user's average rating and rating count."""
+        from sqlalchemy import func
+        
+        # Calculate average rating and count
+        result = db.query(
+            func.avg(UserRating.rating).label('avg_rating'),
+            func.count(UserRating.id).label('rating_count')
+        ).filter(UserRating.rated_user_id == user_id).first()
+        
+        user = self.user_repo.get_by_id(db, user_id)
+        if user:
+            user.rating = float(result.avg_rating) if result.avg_rating else 0.0
+            user.rating_count = result.rating_count if result.rating_count else 0
+            db.commit()
