@@ -1,0 +1,499 @@
+# Selgo Marketplace - Complete Docker Compose Configuration
+# This file includes all microservices for the Selgo marketplace platform
+# Services that have been enhanced with Finn.no features are active
+# Services not yet enhanced are commented out but ready for future development
+
+version: '3.8'
+
+services:
+  # =============================================================================
+  # ENHANCED SERVICES (Active - Ready to Run)
+  # =============================================================================
+
+  # Auth Service - Enhanced with Finn.no user management features
+  auth-service:
+    build: 
+      context: ./selgo-backend/auth-service
+      dockerfile: Dockerfile
+    container_name: selgo-auth-service
+    ports:
+      - "8001:8001"
+    volumes:
+      - ./selgo-backend/auth-service:/app
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=selgo_auth
+      - API_HOST=0.0.0.0
+      - API_PORT=8001
+      - ENVIRONMENT=development
+      - SECRET_KEY=your-super-secret-key-change-this-in-production
+      - JWT_SECRET_KEY=your-jwt-secret-key-change-this-in-production
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - selgo-network
+    command: uvicorn src.app:app --host 0.0.0.0 --port 8001 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Property Service - Enhanced with Finn.no real estate features
+  property-service:
+    build:
+      context: ./selgo-backend/property-service
+      dockerfile: Dockerfile
+    container_name: selgo-property-service
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./selgo-backend/property-service:/app
+      - ./selgo-backend/property-service/uploads:/app/uploads
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=selgo_property
+      - API_HOST=0.0.0.0
+      - API_PORT=8004
+      - ENVIRONMENT=development
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - auth-service
+      - redis
+    networks:
+      - selgo-network
+    command: uvicorn src.app:app --host 0.0.0.0 --port 8004 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Car Service - Enhanced with Finn.no vehicle features
+  car-service:
+    build:
+      context: ./selgo-backend/car-service
+      dockerfile: Dockerfile
+    container_name: selgo-car-service
+    ports:
+      - "8005:8005"
+    volumes:
+      - ./selgo-backend/car-service:/app
+      - ./selgo-backend/car-service/uploads:/app/uploads
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=selgo_car
+      - API_HOST=0.0.0.0
+      - API_PORT=8005
+      - ENVIRONMENT=development
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - auth-service
+      - redis
+    networks:
+      - selgo-network
+    command: uvicorn src.app:app --host 0.0.0.0 --port 8005 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Motorcycle Service - Enhanced with Finn.no motorcycle features
+  motorcycle-service:
+    build: 
+      context: ./selgo-backend/motorcycle-service
+      dockerfile: Dockerfile
+    container_name: selgo-motorcycle-service
+    ports:
+      - "8003:8003"
+    volumes:
+      - ./selgo-backend/motorcycle-service:/app
+      - ./selgo-backend/motorcycle-service/uploads:/app/uploads
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=selgo_motorcycle
+      - API_HOST=0.0.0.0
+      - API_PORT=8003
+      - ENVIRONMENT=development
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - auth-service
+      - redis
+    networks:
+      - selgo-network
+    command: uvicorn src.app:app --host 0.0.0.0 --port 8003 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Boat Service - Enhanced with Finn.no marine features
+  boat-service:
+    build: 
+      context: ./selgo-backend/boat-service
+      dockerfile: Dockerfile
+    container_name: selgo-boat-service
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./selgo-backend/boat-service:/app
+      - ./selgo-backend/boat-service/uploads:/app/uploads
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=selgo_boat
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - ENVIRONMENT=development
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - auth-service
+      - redis
+    networks:
+      - selgo-network
+    command: uvicorn src.app:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Job Service - Enhanced with Finn.no job board features
+  job-service:
+    build: 
+      context: ./selgo-backend/job-service
+      dockerfile: Dockerfile
+    container_name: selgo-job-service
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./selgo-backend/job-service:/app
+      - ./selgo-backend/job-service/uploads:/app/uploads
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=selgo_job
+      - API_HOST=0.0.0.0
+      - API_PORT=8002
+      - ENVIRONMENT=development
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - auth-service
+      - redis
+    networks:
+      - selgo-network
+    command: uvicorn src.app:app --host 0.0.0.0 --port 8002 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Chat Service - Enhanced with Finn.no messaging features
+  chat-service:
+    build:
+      context: ./selgo-backend/chat-service
+      dockerfile: Dockerfile
+    container_name: selgo-chat-service
+    ports:
+      - "8007:8007"
+    volumes:
+      - ./selgo-backend/chat-service:/app
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=12345
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=selgo_chat
+      - API_HOST=0.0.0.0
+      - API_PORT=8007
+      - ENVIRONMENT=development
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - auth-service
+      - redis
+    networks:
+      - selgo-network
+    command: uvicorn src.app:app --host 0.0.0.0 --port 8007 --reload
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8007/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =============================================================================
+  # FRONTEND SERVICE
+  # =============================================================================
+
+  # Selgo Frontend - Next.js application with updated Selgo branding
+  frontend:
+    build:
+      context: ./Selgo-frontend
+      dockerfile: Dockerfile
+    container_name: selgo-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./Selgo-frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:8001
+      - NEXT_PUBLIC_AUTH_SERVICE_URL=http://localhost:8001
+      - NEXT_PUBLIC_PROPERTY_SERVICE_URL=http://localhost:8004
+      - NEXT_PUBLIC_CAR_SERVICE_URL=http://localhost:8005
+      - NEXT_PUBLIC_MOTORCYCLE_SERVICE_URL=http://localhost:8003
+      - NEXT_PUBLIC_BOAT_SERVICE_URL=http://localhost:8000
+      - NEXT_PUBLIC_JOB_SERVICE_URL=http://localhost:8002
+      - NEXT_PUBLIC_CHAT_SERVICE_URL=http://localhost:8007
+    depends_on:
+      - auth-service
+    networks:
+      - selgo-network
+    command: npm run dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # =============================================================================
+  # SERVICES NOT YET ENHANCED (Commented out - Uncomment when ready)
+  # =============================================================================
+
+  # # Square Service - Marketplace/General items (Not yet enhanced)
+  # square-service:
+  #   build:
+  #     context: ./selgo-backend/square-service
+  #     dockerfile: Dockerfile
+  #   container_name: selgo-square-service
+  #   ports:
+  #     - "8006:8006"
+  #   volumes:
+  #     - ./selgo-backend/square-service:/app
+  #     - ./selgo-backend/square-service/uploads:/app/uploads
+  #   environment:
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=12345
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #     - DB_NAME=selgo_square
+  #     - API_HOST=0.0.0.0
+  #     - API_PORT=8006
+  #     - ENVIRONMENT=development
+  #     - AUTH_SERVICE_URL=http://auth-service:8001
+  #   depends_on:
+  #     - postgres
+  #     - auth-service
+  #   networks:
+  #     - selgo-network
+  #   command: uvicorn src.app:app --host 0.0.0.0 --port 8006 --reload
+
+  # # Travel Service - Travel and vacation rentals (Not yet enhanced)
+  # travel-service:
+  #   build:
+  #     context: ./selgo-backend/travel-service
+  #     dockerfile: Dockerfile
+  #   container_name: selgo-travel-service
+  #   ports:
+  #     - "8008:8008"
+  #   volumes:
+  #     - ./selgo-backend/travel-service:/app
+  #     - ./selgo-backend/travel-service/uploads:/app/uploads
+  #   environment:
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=12345
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #     - DB_NAME=selgo_travel
+  #     - API_HOST=0.0.0.0
+  #     - API_PORT=8008
+  #     - ENVIRONMENT=development
+  #     - AUTH_SERVICE_URL=http://auth-service:8001
+  #   depends_on:
+  #     - postgres
+  #     - auth-service
+  #   networks:
+  #     - selgo-network
+  #   command: uvicorn src.app:app --host 0.0.0.0 --port 8008 --reload
+
+  # # Electronics Service - Electronics and gadgets (Not yet enhanced)
+  # electronics-service:
+  #   build:
+  #     context: ./selgo-backend/electronics-service
+  #     dockerfile: Dockerfile
+  #   container_name: selgo-electronics-service
+  #   ports:
+  #     - "8009:8009"
+  #   volumes:
+  #     - ./selgo-backend/electronics-service:/app
+  #     - ./selgo-backend/electronics-service/uploads:/app/uploads
+  #   environment:
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=12345
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #     - DB_NAME=selgo_electronics
+  #     - API_HOST=0.0.0.0
+  #     - API_PORT=8009
+  #     - ENVIRONMENT=development
+  #     - AUTH_SERVICE_URL=http://auth-service:8001
+  #   depends_on:
+  #     - postgres
+  #     - auth-service
+  #   networks:
+  #     - selgo-network
+  #   command: uvicorn src.app:app --host 0.0.0.0 --port 8009 --reload
+
+  # # Commercial Service - Commercial vehicles and equipment (Not yet enhanced)
+  # commercial-service:
+  #   build:
+  #     context: ./selgo-backend/commercial-service
+  #     dockerfile: Dockerfile
+  #   container_name: selgo-commercial-service
+  #   ports:
+  #     - "8010:8010"
+  #   volumes:
+  #     - ./selgo-backend/commercial-service:/app
+  #     - ./selgo-backend/commercial-service/uploads:/app/uploads
+  #   environment:
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=12345
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #     - DB_NAME=selgo_commercial
+  #     - API_HOST=0.0.0.0
+  #     - API_PORT=8010
+  #     - ENVIRONMENT=development
+  #     - AUTH_SERVICE_URL=http://auth-service:8001
+  #   depends_on:
+  #     - postgres
+  #     - auth-service
+  #   networks:
+  #     - selgo-network
+  #   command: uvicorn src.app:app --host 0.0.0.0 --port 8010 --reload
+
+  # =============================================================================
+  # INFRASTRUCTURE SERVICES
+  # =============================================================================
+
+  # Redis - Caching and session management
+  redis:
+    image: redis:7-alpine
+    container_name: selgo-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - selgo-network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PostgreSQL with PostGIS - Main database with geospatial support
+  postgres:
+    image: postgis/postgis:14-3.2
+    container_name: selgo-postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=12345
+      - POSTGRES_DB=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./selgo-backend/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - selgo-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # PgAdmin - Database administration interface
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: selgo-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@selgo.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - selgo-network
+
+  # Nginx - Reverse proxy and load balancer (Optional)
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: selgo-nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf
+  #     - ./ssl:/etc/nginx/ssl
+  #   depends_on:
+  #     - frontend
+  #     - auth-service
+  #   networks:
+  #     - selgo-network
+
+# =============================================================================
+# NETWORKS AND VOLUMES
+# =============================================================================
+
+networks:
+  selgo-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local
