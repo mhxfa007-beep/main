@@ -1,9 +1,11 @@
 # File: job-service/src/models/schemas.py
 
 from pydantic import BaseModel, Field, ConfigDict
-from typing import Optional, List, Dict, Any
+from typing import List, Dict, Any, Union
 from datetime import datetime
+from decimal import Decimal
 from enum import Enum
+from uuid import UUID
 
 # Enums
 class JobTypeEnum(str, Enum):
@@ -44,13 +46,13 @@ class CVTemplateEnum(str, Enum):
 # Base Schemas
 class CompanyBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=255)
-    description: Optional[str] = None
-    website: Optional[str] = None
-    logo_url: Optional[str] = None
-    industry: Optional[str] = None
-    size: Optional[str] = None
-    location: Optional[str] = None
-    founded_year: Optional[int] = None
+    description: Union[str, None] = Field(default=None)
+    website: Union[str, None] = Field(default=None)
+    logo_url: Union[str, None] = Field(default=None)
+    industry: Union[str, None] = Field(default=None)
+    size: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    founded_year: Union[int, None] = Field(default=None)
 
 class CompanyCreate(CompanyBase):
     pass
@@ -66,58 +68,58 @@ class CompanyResponse(CompanyBase):
 class JobBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=255)
     description: str = Field(..., min_length=10)
-    short_description: Optional[str] = None
-    requirements: Optional[str] = None
-    responsibilities: Optional[str] = None
-    benefits: Optional[str] = None
+    short_description: Union[str, None] = Field(default=None)
+    requirements: Union[str, None] = Field(default=None)
+    responsibilities: Union[str, None] = Field(default=None)
+    benefits: Union[str, None] = Field(default=None)
     job_type: JobTypeEnum
     experience_level: ExperienceLevelEnum
-    salary_min: Optional[float] = None
-    salary_max: Optional[float] = None
+    salary_min: Union[float, None] = Field(default=None)
+    salary_max: Union[float, None] = Field(default=None)
     salary_currency: str = "USD"
     is_salary_negotiable: bool = False
-    location: Optional[str] = None
+    location: Union[str, None] = Field(default=None)
     is_remote: bool = False
-    city: Optional[str] = None
-    state: Optional[str] = None
-    country: Optional[str] = None
-    application_deadline: Optional[datetime] = None
-    application_email: Optional[str] = None
-    application_url: Optional[str] = None
-    contact_person: Optional[str] = None
-    contact_phone: Optional[str] = None
+    city: Union[str, None] = Field(default=None)
+    state: Union[str, None] = Field(default=None)
+    country: Union[str, None] = Field(default=None)
+    application_deadline: Union[datetime, None] = Field(default=None)
+    application_email: Union[str, None] = Field(default=None)
+    application_url: Union[str, None] = Field(default=None)
+    contact_person: Union[str, None] = Field(default=None)
+    contact_phone: Union[str, None] = Field(default=None)
     featured: bool = False
-    tags: Optional[List[str]] = None
+    tags: Union[List[str, None]] = None
 
 class JobCreate(JobBase):
     company_id: int
-    category_id: Optional[int] = None
+    category_id: Union[int, None] = Field(default=None)
 
 class JobUpdate(BaseModel):
-    title: Optional[str] = None
-    description: Optional[str] = None
-    short_description: Optional[str] = None
-    requirements: Optional[str] = None
-    responsibilities: Optional[str] = None
-    benefits: Optional[str] = None
-    job_type: Optional[JobTypeEnum] = None
-    experience_level: Optional[ExperienceLevelEnum] = None
-    salary_min: Optional[float] = None
-    salary_max: Optional[float] = None
-    is_salary_negotiable: Optional[bool] = None
-    location: Optional[str] = None
-    is_remote: Optional[bool] = None
-    city: Optional[str] = None
-    state: Optional[str] = None
-    country: Optional[str] = None
-    application_deadline: Optional[datetime] = None
-    application_email: Optional[str] = None
-    application_url: Optional[str] = None
-    contact_person: Optional[str] = None
-    contact_phone: Optional[str] = None
-    status: Optional[JobStatusEnum] = None
-    featured: Optional[bool] = None
-    tags: Optional[List[str]] = None
+    title: Union[str, None] = Field(default=None)
+    description: Union[str, None] = Field(default=None)
+    short_description: Union[str, None] = Field(default=None)
+    requirements: Union[str, None] = Field(default=None)
+    responsibilities: Union[str, None] = Field(default=None)
+    benefits: Union[str, None] = Field(default=None)
+    job_type: Union[JobTypeEnum, None] = Field(default=None)
+    experience_level: Union[ExperienceLevelEnum, None] = Field(default=None)
+    salary_min: Union[float, None] = Field(default=None)
+    salary_max: Union[float, None] = Field(default=None)
+    is_salary_negotiable: Union[bool, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    is_remote: Union[bool, None] = Field(default=None)
+    city: Union[str, None] = Field(default=None)
+    state: Union[str, None] = Field(default=None)
+    country: Union[str, None] = Field(default=None)
+    application_deadline: Union[datetime, None] = Field(default=None)
+    application_email: Union[str, None] = Field(default=None)
+    application_url: Union[str, None] = Field(default=None)
+    contact_person: Union[str, None] = Field(default=None)
+    contact_phone: Union[str, None] = Field(default=None)
+    status: Union[JobStatusEnum, None] = Field(default=None)
+    featured: Union[bool, None] = Field(default=None)
+    tags: Union[List[str, None]] = None
 
 class JobResponse(JobBase):
     id: int
@@ -126,34 +128,34 @@ class JobResponse(JobBase):
     view_count: int = 0
     application_count: int = 0
     company_id: int
-    category_id: Optional[int] = None
+    category_id: Union[int, None] = Field(default=None)
     posted_by: int
     created_at: datetime
     updated_at: datetime
-    published_at: Optional[datetime] = None
+    published_at: Union[datetime, None] = Field(default=None)
     
     # Nested objects
-    company: Optional[CompanyResponse] = None
+    company: Union[CompanyResponse, None] = Field(default=None)
     
     model_config = ConfigDict(from_attributes=True)
 
 # Job Search and Filter Schemas
 class JobSearchRequest(BaseModel):
-    q: Optional[str] = None  # Search query
-    location: Optional[str] = None
-    job_type: Optional[List[JobTypeEnum]] = None
-    experience_level: Optional[List[ExperienceLevelEnum]] = None
-    salary_min: Optional[float] = None
-    salary_max: Optional[float] = None
-    is_remote: Optional[bool] = None
-    company_id: Optional[int] = None
-    category_id: Optional[int] = None
-    tags: Optional[List[str]] = None
-    posted_within_days: Optional[int] = None
+    q: Union[str, None] = Field(default=None)  # Search query
+    location: Union[str, None] = Field(default=None)
+    job_type: Union[List[JobTypeEnum, None]] = None
+    experience_level: Union[List[ExperienceLevelEnum, None]] = None
+    salary_min: Union[float, None] = Field(default=None)
+    salary_max: Union[float, None] = Field(default=None)
+    is_remote: Union[bool, None] = Field(default=None)
+    company_id: Union[int, None] = Field(default=None)
+    category_id: Union[int, None] = Field(default=None)
+    tags: Union[List[str, None]] = None
+    posted_within_days: Union[int, None] = Field(default=None)
     page: int = Field(default=1, ge=1)
     limit: int = Field(default=20, ge=1, le=100)
-    sort_by: Optional[str] = "created_at"  # created_at, salary_max, view_count
-    sort_order: Optional[str] = "desc"  # asc, desc
+    sort_by: Union[str, None] = "created_at"  # created_at, salary_max, view_count
+    sort_order: Union[str, None] = "desc"  # asc, desc
 
 class JobSearchResponse(BaseModel):
     jobs: List[JobResponse]
@@ -164,18 +166,18 @@ class JobSearchResponse(BaseModel):
 
 # Profile Schemas
 class JobProfileBase(BaseModel):
-    phone: Optional[str] = None
-    location: Optional[str] = None
-    website: Optional[str] = None
-    linkedin_url: Optional[str] = None
-    github_url: Optional[str] = None
-    professional_summary: Optional[str] = None
-    desired_job_title: Optional[str] = None
-    desired_salary_min: Optional[float] = None
-    desired_salary_max: Optional[float] = None
+    phone: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    website: Union[str, None] = Field(default=None)
+    linkedin_url: Union[str, None] = Field(default=None)
+    github_url: Union[str, None] = Field(default=None)
+    professional_summary: Union[str, None] = Field(default=None)
+    desired_job_title: Union[str, None] = Field(default=None)
+    desired_salary_min: Union[float, None] = Field(default=None)
+    desired_salary_max: Union[float, None] = Field(default=None)
     salary_currency: str = "USD"
     willing_to_relocate: bool = False
-    available_from: Optional[datetime] = None
+    available_from: Union[datetime, None] = Field(default=None)
     profile_visibility: str = "private"
     allow_contact: bool = True
     receive_job_alerts: bool = True
@@ -199,22 +201,22 @@ class JobProfileResponse(JobProfileBase):
 class WorkExperienceBase(BaseModel):
     job_title: str = Field(..., min_length=1, max_length=255)
     company_name: str = Field(..., min_length=1, max_length=255)
-    company_website: Optional[str] = None
-    location: Optional[str] = None
+    company_website: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
     start_date: datetime
-    end_date: Optional[datetime] = None
+    end_date: Union[datetime, None] = Field(default=None)
     is_current: bool = False
-    description: Optional[str] = None
-    achievements: Optional[str] = None
+    description: Union[str, None] = Field(default=None)
+    achievements: Union[str, None] = Field(default=None)
     display_order: int = 0
 
 class WorkExperienceCreate(WorkExperienceBase):
     pass
 
 class WorkExperienceUpdate(WorkExperienceBase):
-    job_title: Optional[str] = None
-    company_name: Optional[str] = None
-    start_date: Optional[datetime] = None
+    job_title: Union[str, None] = Field(default=None)
+    company_name: Union[str, None] = Field(default=None)
+    start_date: Union[datetime, None] = Field(default=None)
 
 class WorkExperienceResponse(WorkExperienceBase):
     id: int
@@ -226,23 +228,23 @@ class WorkExperienceResponse(WorkExperienceBase):
 # Education Schemas
 class EducationBase(BaseModel):
     degree: str = Field(..., min_length=1, max_length=255)
-    field_of_study: Optional[str] = None
+    field_of_study: Union[str, None] = Field(default=None)
     institution: str = Field(..., min_length=1, max_length=255)
-    location: Optional[str] = None
+    location: Union[str, None] = Field(default=None)
     start_date: datetime
-    end_date: Optional[datetime] = None
+    end_date: Union[datetime, None] = Field(default=None)
     is_current: bool = False
-    gpa: Optional[float] = None
-    description: Optional[str] = None
+    gpa: Union[float, None] = Field(default=None)
+    description: Union[str, None] = Field(default=None)
     display_order: int = 0
 
 class EducationCreate(EducationBase):
     pass
 
 class EducationUpdate(EducationBase):
-    degree: Optional[str] = None
-    institution: Optional[str] = None
-    start_date: Optional[datetime] = None
+    degree: Union[str, None] = Field(default=None)
+    institution: Union[str, None] = Field(default=None)
+    start_date: Union[datetime, None] = Field(default=None)
 
 class EducationResponse(EducationBase):
     id: int
@@ -254,7 +256,7 @@ class EducationResponse(EducationBase):
 # Skill Schemas
 class SkillBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
-    category: Optional[str] = None
+    category: Union[str, None] = Field(default=None)
 
 class SkillCreate(SkillBase):
     pass
@@ -269,7 +271,7 @@ class SkillResponse(SkillBase):
 class UserSkillBase(BaseModel):
     skill_id: int
     proficiency_level: ProficiencyLevelEnum
-    years_of_experience: Optional[int] = None
+    years_of_experience: Union[int, None] = Field(default=None)
 
 class UserSkillCreate(UserSkillBase):
     pass
@@ -277,7 +279,7 @@ class UserSkillCreate(UserSkillBase):
 class UserSkillResponse(UserSkillBase):
     id: int
     profile_id: int
-    skill: Optional[SkillResponse] = None
+    skill: Union[SkillResponse, None] = Field(default=None)
     created_at: datetime
     
     model_config = ConfigDict(from_attributes=True)
@@ -285,7 +287,7 @@ class UserSkillResponse(UserSkillBase):
 # Language Schemas
 class LanguageBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
-    code: Optional[str] = None
+    code: Union[str, None] = Field(default=None)
 
 class LanguageCreate(LanguageBase):
     pass
@@ -307,7 +309,7 @@ class UserLanguageCreate(UserLanguageBase):
 class UserLanguageResponse(UserLanguageBase):
     id: int
     profile_id: int
-    language: Optional[LanguageResponse] = None
+    language: Union[LanguageResponse, None] = Field(default=None)
     created_at: datetime
     
     model_config = ConfigDict(from_attributes=True)
@@ -316,7 +318,7 @@ class UserLanguageResponse(UserLanguageBase):
 class CVBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=255)
     template: CVTemplateEnum = CVTemplateEnum.MODERN
-    cv_data: Optional[Dict[str, Any]] = None
+    cv_data: Union[Dict[str, Any, None]] = None
     is_public: bool = False
     allow_downloads: bool = True
 
@@ -324,33 +326,33 @@ class CVCreate(CVBase):
     pass
 
 class CVUpdate(BaseModel):
-    title: Optional[str] = None
-    template: Optional[CVTemplateEnum] = None
-    cv_data: Optional[Dict[str, Any]] = None
-    is_public: Optional[bool] = None
-    allow_downloads: Optional[bool] = None
+    title: Union[str, None] = Field(default=None)
+    template: Union[CVTemplateEnum, None] = Field(default=None)
+    cv_data: Union[Dict[str, Any, None]] = None
+    is_public: Union[bool, None] = Field(default=None)
+    allow_downloads: Union[bool, None] = Field(default=None)
 
 class CVResponse(CVBase):
     id: int
     user_id: int
     status: str
-    file_path: Optional[str] = None
-    file_size: Optional[int] = None
+    file_path: Union[str, None] = Field(default=None)
+    file_size: Union[int, None] = Field(default=None)
     view_count: int = 0
     download_count: int = 0
     created_at: datetime
     updated_at: datetime
-    last_generated_at: Optional[datetime] = None
+    last_generated_at: Union[datetime, None] = Field(default=None)
     
     model_config = ConfigDict(from_attributes=True)
 
 # CV Builder Steps Schemas
 class ContactInfoStep(BaseModel):
     email: str
-    phone: Optional[str] = None
-    location: Optional[str] = None
-    website: Optional[str] = None
-    linkedin_url: Optional[str] = None
+    phone: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    website: Union[str, None] = Field(default=None)
+    linkedin_url: Union[str, None] = Field(default=None)
 
 class WorkExperienceStep(BaseModel):
     experiences: List[WorkExperienceBase] = []
@@ -365,17 +367,17 @@ class SummaryStep(BaseModel):
     professional_summary: str
 
 class CVBuilderData(BaseModel):
-    contact_info: Optional[ContactInfoStep] = None
-    work_experience: Optional[WorkExperienceStep] = None
-    education: Optional[EducationStep] = None
-    languages: Optional[LanguageStep] = None
-    summary: Optional[SummaryStep] = None
+    contact_info: Union[ContactInfoStep, None] = Field(default=None)
+    work_experience: Union[WorkExperienceStep, None] = Field(default=None)
+    education: Union[EducationStep, None] = Field(default=None)
+    languages: Union[LanguageStep, None] = Field(default=None)
+    summary: Union[SummaryStep, None] = Field(default=None)
 
 # Article Schemas
 class ArticleCategoryBase(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     slug: str = Field(..., min_length=1, max_length=100)
-    description: Optional[str] = None
+    description: Union[str, None] = Field(default=None)
     display_order: int = 0
 
 class ArticleCategoryCreate(ArticleCategoryBase):
@@ -391,40 +393,40 @@ class ArticleCategoryResponse(ArticleCategoryBase):
 class ArticleBase(BaseModel):
     title: str = Field(..., min_length=1, max_length=255)
     slug: str = Field(..., min_length=1, max_length=255)
-    excerpt: Optional[str] = None
+    excerpt: Union[str, None] = Field(default=None)
     content: str = Field(..., min_length=10)
-    featured_image: Optional[str] = None
-    image_alt: Optional[str] = None
-    category_id: Optional[int] = None
-    tags: Optional[List[str]] = None
-    meta_title: Optional[str] = None
-    meta_description: Optional[str] = None
-    reading_time: Optional[int] = None
+    featured_image: Union[str, None] = Field(default=None)
+    image_alt: Union[str, None] = Field(default=None)
+    category_id: Union[int, None] = Field(default=None)
+    tags: Union[List[str, None]] = None
+    meta_title: Union[str, None] = Field(default=None)
+    meta_description: Union[str, None] = Field(default=None)
+    reading_time: Union[int, None] = Field(default=None)
 
 class ArticleCreate(ArticleBase):
     pass
 
 class ArticleUpdate(BaseModel):
-    title: Optional[str] = None
-    excerpt: Optional[str] = None
-    content: Optional[str] = None
-    featured_image: Optional[str] = None
-    image_alt: Optional[str] = None
-    category_id: Optional[int] = None
-    tags: Optional[List[str]] = None
-    meta_title: Optional[str] = None
-    meta_description: Optional[str] = None
-    status: Optional[str] = None
+    title: Union[str, None] = Field(default=None)
+    excerpt: Union[str, None] = Field(default=None)
+    content: Union[str, None] = Field(default=None)
+    featured_image: Union[str, None] = Field(default=None)
+    image_alt: Union[str, None] = Field(default=None)
+    category_id: Union[int, None] = Field(default=None)
+    tags: Union[List[str, None]] = None
+    meta_title: Union[str, None] = Field(default=None)
+    meta_description: Union[str, None] = Field(default=None)
+    status: Union[str, None] = Field(default=None)
 
 class ArticleResponse(ArticleBase):
     id: int
     status: str
-    published_at: Optional[datetime] = None
+    published_at: Union[datetime, None] = Field(default=None)
     author_id: int
     view_count: int = 0
     created_at: datetime
     updated_at: datetime
-    category: Optional[ArticleCategoryResponse] = None
+    category: Union[ArticleCategoryResponse, None] = Field(default=None)
     
     model_config = ConfigDict(from_attributes=True)
 
@@ -433,14 +435,14 @@ class SalaryEntryBase(BaseModel):
     job_title: str = Field(..., min_length=1, max_length=255)
     annual_salary: float = Field(..., gt=0)
     currency: str = "USD"
-    bonus: Optional[float] = None
-    stock_options: Optional[float] = None
-    other_compensation: Optional[float] = None
-    company_name: Optional[str] = None
-    location: Optional[str] = None
-    years_of_experience: Optional[int] = None
-    company_size: Optional[str] = None
-    industry: Optional[str] = None
+    bonus: Union[float, None] = Field(default=None)
+    stock_options: Union[float, None] = Field(default=None)
+    other_compensation: Union[float, None] = Field(default=None)
+    company_name: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    years_of_experience: Union[int, None] = Field(default=None)
+    company_size: Union[str, None] = Field(default=None)
+    industry: Union[str, None] = Field(default=None)
     is_current: bool = True
     is_anonymous: bool = True
 
@@ -457,13 +459,13 @@ class SalaryEntryResponse(SalaryEntryBase):
 
 class SalaryComparisonRequest(BaseModel):
     job_title: str
-    location: Optional[str] = None
-    years_of_experience: Optional[int] = None
-    industry: Optional[str] = None
+    location: Union[str, None] = Field(default=None)
+    years_of_experience: Union[int, None] = Field(default=None)
+    industry: Union[str, None] = Field(default=None)
 
 class SalaryComparisonResponse(BaseModel):
     job_title: str
-    location: Optional[str] = None
+    location: Union[str, None] = Field(default=None)
     average_salary: float
     median_salary: float
     min_salary: float
@@ -478,8 +480,8 @@ class JobRecommendationResponse(BaseModel):
     id: int
     job_id: int
     score: float
-    reason: Optional[str] = None
-    job: Optional[JobResponse] = None
+    reason: Union[str, None] = Field(default=None)
+    job: Union[JobResponse, None] = Field(default=None)
     created_at: datetime
     
     model_config = ConfigDict(from_attributes=True)
@@ -506,7 +508,7 @@ class FileUploadResponse(BaseModel):
     file_path: str
     file_size: int
     file_type: str
-    upload_url: Optional[str] = None
+    upload_url: Union[str, None] = Field(default=None)
 
 # Generic Response Schemas
 class MessageResponse(BaseModel):
@@ -514,7 +516,7 @@ class MessageResponse(BaseModel):
     
 class ErrorResponse(BaseModel):
     error: str
-    detail: Optional[str] = None
+    detail: Union[str, None] = Field(default=None)
     
 # Job Alert Schemas
 class JobAlertCreate(BaseModel):
@@ -524,11 +526,11 @@ class JobAlertCreate(BaseModel):
     frequency: str = Field(default="daily", description="daily, weekly, monthly")
 
 class JobAlertUpdate(BaseModel):
-    alert_name: Optional[str] = None
-    search_criteria: Optional[Dict[str, Any]] = None
-    notification_method: Optional[str] = None
-    frequency: Optional[str] = None
-    is_active: Optional[bool] = None
+    alert_name: Union[str, None] = Field(default=None)
+    search_criteria: Union[Dict[str, Any, None]] = None
+    notification_method: Union[str, None] = Field(default=None)
+    frequency: Union[str, None] = Field(default=None)
+    is_active: Union[bool, None] = Field(default=None)
 
 class JobAlertResponse(BaseModel):
     id: int
@@ -539,7 +541,7 @@ class JobAlertResponse(BaseModel):
     notification_method: str
     frequency: str
     total_jobs_sent: int
-    last_sent_at: Optional[datetime] = None
+    last_sent_at: Union[datetime, None] = Field(default=None)
     created_at: datetime
     updated_at: datetime
     
@@ -549,26 +551,26 @@ class JobAlertResponse(BaseModel):
 class JobRecommendationResponse(BaseModel):
     job_id: int
     title: str
-    company: Optional[str] = None
-    location: Optional[str] = None
-    salary_min: Optional[float] = None
-    salary_max: Optional[float] = None
+    company: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    salary_min: Union[float, None] = Field(default=None)
+    salary_max: Union[float, None] = Field(default=None)
     score: float
     reason: str
     created_at: datetime
 
 # User Job Preferences Schemas
 class UserJobPreferencesCreate(BaseModel):
-    preferred_job_titles: Optional[List[str]] = None
-    preferred_locations: Optional[List[str]] = None
-    preferred_job_types: Optional[List[str]] = None
-    preferred_experience_levels: Optional[List[str]] = None
-    min_salary: Optional[float] = None
-    max_salary: Optional[float] = None
+    preferred_job_titles: Union[List[str, None]] = None
+    preferred_locations: Union[List[str, None]] = None
+    preferred_job_types: Union[List[str, None]] = None
+    preferred_experience_levels: Union[List[str, None]] = None
+    min_salary: Union[float, None] = Field(default=None)
+    max_salary: Union[float, None] = Field(default=None)
     salary_currency: str = "USD"
     remote_preference: str = "no_preference"
-    preferred_company_sizes: Optional[List[str]] = None
-    preferred_industries: Optional[List[str]] = None
+    preferred_company_sizes: Union[List[str, None]] = None
+    preferred_industries: Union[List[str, None]] = None
     email_notifications: bool = True
     push_notifications: bool = True
     notification_frequency: str = "daily"
@@ -583,34 +585,34 @@ class UserJobPreferencesResponse(UserJobPreferencesCreate):
 
 # Enhanced Job Response with Analytics
 class JobResponseWithAnalytics(JobResponse):
-    analytics: Optional[Dict[str, Any]] = None
-    is_saved: Optional[bool] = None
-    is_applied: Optional[bool] = None
-    recommendation_score: Optional[float] = None
-    recommendation_reason: Optional[str] = None
+    analytics: Union[Dict[str, Any, None]] = None
+    is_saved: Union[bool, None] = Field(default=None)
+    is_applied: Union[bool, None] = Field(default=None)
+    recommendation_score: Union[float, None] = Field(default=None)
+    recommendation_reason: Union[str, None] = Field(default=None)
 
 # Job Application Schemas
 class JobApplicationCreate(BaseModel):
-    cover_letter: Optional[str] = None
-    cv_file_path: Optional[str] = None
-    additional_info: Optional[str] = None
+    cover_letter: Union[str, None] = Field(default=None)
+    cv_file_path: Union[str, None] = Field(default=None)
+    additional_info: Union[str, None] = Field(default=None)
 
 class JobApplicationUpdate(BaseModel):
-    status: Optional[str] = None
-    cover_letter: Optional[str] = None
-    additional_info: Optional[str] = None
+    status: Union[str, None] = Field(default=None)
+    cover_letter: Union[str, None] = Field(default=None)
+    additional_info: Union[str, None] = Field(default=None)
 
 class JobApplicationResponse(BaseModel):
     id: int
     job_id: int
     user_id: int
-    cover_letter: Optional[str] = None
-    cv_file_path: Optional[str] = None
-    additional_info: Optional[str] = None
+    cover_letter: Union[str, None] = Field(default=None)
+    cv_file_path: Union[str, None] = Field(default=None)
+    additional_info: Union[str, None] = Field(default=None)
     status: str
     applied_at: datetime
-    reviewed_at: Optional[datetime] = None
-    job: Optional[JobResponse] = None
+    reviewed_at: Union[datetime, None] = Field(default=None)
+    job: Union[JobResponse, None] = Field(default=None)
     
     model_config = ConfigDict(from_attributes=True)
 
@@ -618,37 +620,37 @@ class JobApplicationResponse(BaseModel):
 class JobCategoryCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=100)
     slug: str = Field(..., min_length=1, max_length=100)
-    description: Optional[str] = None
-    parent_id: Optional[int] = None
+    description: Union[str, None] = Field(default=None)
+    parent_id: Union[int, None] = Field(default=None)
 
 class JobCategoryResponse(BaseModel):
     id: int
     name: str
     slug: str
-    description: Optional[str] = None
-    parent_id: Optional[int] = None
+    description: Union[str, None] = Field(default=None)
+    parent_id: Union[int, None] = Field(default=None)
     is_active: bool
-    job_count: Optional[int] = None
+    job_count: Union[int, None] = Field(default=None)
     created_at: datetime
-    children: Optional[List['JobCategoryResponse']] = None
+    children: Union[List['JobCategoryResponse', None]] = None
     
     model_config = ConfigDict(from_attributes=True)
 
 # Company Schemas (Enhanced)
 class CompanyUpdate(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    website: Optional[str] = None
-    logo_url: Optional[str] = None
-    industry: Optional[str] = None
-    size: Optional[str] = None
-    location: Optional[str] = None
-    founded_year: Optional[int] = None
+    name: Union[str, None] = Field(default=None)
+    description: Union[str, None] = Field(default=None)
+    website: Union[str, None] = Field(default=None)
+    logo_url: Union[str, None] = Field(default=None)
+    industry: Union[str, None] = Field(default=None)
+    size: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    founded_year: Union[int, None] = Field(default=None)
 
 class CompanyResponseWithJobs(CompanyResponse):
-    jobs: Optional[List[JobResponse]] = None
+    jobs: Union[List[JobResponse, None]] = None
     job_count: int = 0
-    avg_salary: Optional[float] = None
+    avg_salary: Union[float, None] = Field(default=None)
 
 # Job Analytics Schemas
 class JobAnalyticsResponse(BaseModel):
@@ -669,19 +671,19 @@ class EmployerAnalyticsResponse(BaseModel):
 
 # Search and Filter Schemas (Enhanced)
 class JobSearchFilters(BaseModel):
-    q: Optional[str] = None
-    location: Optional[str] = None
-    job_type: Optional[List[str]] = None
-    experience_level: Optional[List[str]] = None
-    salary_min: Optional[float] = None
-    salary_max: Optional[float] = None
-    is_remote: Optional[bool] = None
-    company_id: Optional[int] = None
-    category_id: Optional[int] = None
-    tags: Optional[List[str]] = None
-    posted_within_days: Optional[int] = None
-    company_size: Optional[List[str]] = None
-    industry: Optional[List[str]] = None
+    q: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    job_type: Union[List[str, None]] = None
+    experience_level: Union[List[str, None]] = None
+    salary_min: Union[float, None] = Field(default=None)
+    salary_max: Union[float, None] = Field(default=None)
+    is_remote: Union[bool, None] = Field(default=None)
+    company_id: Union[int, None] = Field(default=None)
+    category_id: Union[int, None] = Field(default=None)
+    tags: Union[List[str, None]] = None
+    posted_within_days: Union[int, None] = Field(default=None)
+    company_size: Union[List[str, None]] = None
+    industry: Union[List[str, None]] = None
 
 class JobSearchResponseEnhanced(BaseModel):
     jobs: List[JobResponseWithAnalytics]
@@ -690,7 +692,7 @@ class JobSearchResponseEnhanced(BaseModel):
     limit: int
     total_pages: int
     filters_applied: JobSearchFilters
-    facets: Optional[Dict[str, List[Dict[str, Any]]]] = None  # For filter counts
+    facets: Union[Dict[str, List[Dict[str, Any, None]]]] = None  # For filter counts
 
 # Saved Job Schemas
 class SavedJobResponse(BaseModel):
@@ -698,7 +700,7 @@ class SavedJobResponse(BaseModel):
     job_id: int
     user_id: int
     saved_at: datetime
-    job: Optional[JobResponse] = None
+    job: Union[JobResponse, None] = Field(default=None)
     
     model_config = ConfigDict(from_attributes=True)
 
@@ -706,9 +708,9 @@ class SavedJobResponse(BaseModel):
 class JobViewResponse(BaseModel):
     id: int
     job_id: int
-    user_id: Optional[int] = None
+    user_id: Union[int, None] = Field(default=None)
     viewed_at: datetime
-    job: Optional[JobResponse] = None
+    job: Union[JobResponse, None] = Field(default=None)
     
     model_config = ConfigDict(from_attributes=True)
 
@@ -745,8 +747,8 @@ class FilterOptionsResponse(BaseModel):
     
 # Job Feed Schemas (for homepage/recommendations)
 class JobFeedRequest(BaseModel):
-    user_location: Optional[str] = None
-    user_skills: Optional[List[str]] = None
+    user_location: Union[str, None] = Field(default=None)
+    user_skills: Union[List[str, None]] = None
     feed_type: str = "mixed"  # recent, recommended, trending, mixed
     limit: int = Field(default=20, ge=1, le=100)
 
@@ -762,7 +764,7 @@ class CompanyFollowResponse(BaseModel):
     company_id: int
     user_id: int
     followed_at: datetime
-    company: Optional[CompanyResponse] = None
+    company: Union[CompanyResponse, None] = Field(default=None)
     
     model_config = ConfigDict(from_attributes=True)
 
@@ -772,7 +774,7 @@ class JobAlertSummaryResponse(BaseModel):
     active_alerts: int
     total_jobs_sent: int
     alerts_sent_today: int
-    most_active_alert: Optional[str] = None
+    most_active_alert: Union[str, None] = Field(default=None)
     
 # User Job Activity Summary
 class UserJobActivityResponse(BaseModel):
@@ -780,6 +782,523 @@ class UserJobActivityResponse(BaseModel):
     jobs_viewed_today: int
     jobs_saved_total: int
     applications_submitted: int
-    last_job_viewed: Optional[datetime] = None
+    last_job_viewed: Union[datetime, None] = Field(default=None)
     activity_score: int
     recommended_actions: List[str]
+
+# Enhanced Job Schemas with Finn.no job board features
+
+class EnhancedCompanyBase(BaseModel):
+    # Basic Information
+    name: str = Field(max_length=255)
+    slug: str = Field(max_length=255)
+    description: Union[str, None] = Field(default=None)
+    short_description: Union[str, None] = Field(default=None, max_length=500)
+    tagline: Union[str, None] = Field(default=None, max_length=200)
+    
+    # Contact Information
+    website: Union[str, None] = Field(default=None, max_length=500)
+    email: Union[str, None] = Field(default=None, max_length=255)
+    phone: Union[str, None] = Field(default=None, max_length=50)
+    
+    # Visual Identity
+    logo_url: Union[str, None] = Field(default=None, max_length=500)
+    cover_image_url: Union[str, None] = Field(default=None, max_length=500)
+    brand_colors: Union[Dict[str, str], None] = Field(default=None)
+    
+    # Company Details
+    industry: Union[str, None] = Field(default=None, max_length=100)
+    company_size: Union[str, None] = Field(default=None, max_length=50)
+    founded_year: Union[int, None] = Field(default=None, ge=1800, le=2030)
+    company_type: Union[str, None] = Field(default=None, max_length=50)
+    
+    # Location Information
+    headquarters_address: Union[str, None] = Field(default=None, max_length=500)
+    headquarters_city: Union[str, None] = Field(default=None, max_length=100)
+    headquarters_country: Union[str, None] = Field(default=None, max_length=100)
+    office_locations: Union[List[str], None] = Field(default_factory=list)
+    
+    # Company Culture & Values
+    mission_statement: Union[str, None] = Field(default=None)
+    vision_statement: Union[str, None] = Field(default=None)
+    core_values: Union[List[str], None] = Field(default_factory=list)
+    company_culture: Union[str, None] = Field(default=None)
+    work_environment: Union[str, None] = Field(default=None, max_length=50)
+    
+    # Benefits & Perks
+    benefits: Union[List[str], None] = Field(default_factory=list)
+    perks: Union[List[str], None] = Field(default_factory=list)
+    remote_work_policy: Union[str, None] = Field(default=None, max_length=50)
+    
+    # Social Media & Links
+    linkedin_url: Union[str, None] = Field(default=None, max_length=500)
+    twitter_url: Union[str, None] = Field(default=None, max_length=500)
+    facebook_url: Union[str, None] = Field(default=None, max_length=500)
+    
+    # Company Statistics
+    employee_count: Union[int, None] = Field(default=None, ge=0)
+    annual_revenue: Union[Decimal, None] = Field(default=None, ge=0)
+    revenue_currency: str = Field(default='NOK', max_length=3)
+
+class EnhancedCompanyCreate(EnhancedCompanyBase):
+    pass
+
+class EnhancedCompany(EnhancedCompanyBase):
+    id: UUID
+    
+    # Ratings & Reviews
+    overall_rating: float = Field(default=0.0, ge=0.0, le=5.0)
+    culture_rating: float = Field(default=0.0, ge=0.0, le=5.0)
+    salary_rating: float = Field(default=0.0, ge=0.0, le=5.0)
+    benefits_rating: float = Field(default=0.0, ge=0.0, le=5.0)
+    management_rating: float = Field(default=0.0, ge=0.0, le=5.0)
+    career_rating: float = Field(default=0.0, ge=0.0, le=5.0)
+    total_reviews: int = Field(default=0, ge=0)
+    
+    # Verification & Status
+    is_verified: bool = Field(default=False)
+    is_premium: bool = Field(default=False)
+    is_hiring: bool = Field(default=True)
+    is_active: bool = Field(default=True)
+    
+    # Timestamps
+    created_at: datetime
+    updated_at: Union[datetime, None] = Field(default=None)
+    verified_at: Union[datetime, None] = Field(default=None)
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class EnhancedJobBase(BaseModel):
+    # Basic Information
+    title: str = Field(max_length=255)
+    slug: str = Field(max_length=255)
+    description: str
+    short_description: Union[str, None] = Field(default=None, max_length=1000)
+    summary: Union[str, None] = Field(default=None, max_length=500)
+    
+    # Detailed Job Information
+    requirements: Union[str, None] = Field(default=None)
+    responsibilities: Union[str, None] = Field(default=None)
+    qualifications: Union[str, None] = Field(default=None)
+    preferred_qualifications: Union[str, None] = Field(default=None)
+    benefits: Union[str, None] = Field(default=None)
+    company_culture_fit: Union[str, None] = Field(default=None)
+    
+    # Job Classification
+    job_type: str = Field(max_length=50)
+    experience_level: str = Field(max_length=50)
+    seniority_level: Union[str, None] = Field(default=None, max_length=50)
+    department: Union[str, None] = Field(default=None, max_length=100)
+    team: Union[str, None] = Field(default=None, max_length=100)
+    
+    # Work Arrangement
+    work_arrangement: str = Field(default='on_site', max_length=50)
+    remote_work_percentage: int = Field(default=0, ge=0, le=100)
+    travel_requirement: Union[str, None] = Field(default=None, max_length=50)
+    
+    # Salary Information
+    salary_min: Union[Decimal, None] = Field(default=None, ge=0)
+    salary_max: Union[Decimal, None] = Field(default=None, ge=0)
+    salary_currency: str = Field(default="NOK", max_length=3)
+    salary_type: str = Field(default='yearly', max_length=20)
+    is_salary_negotiable: bool = Field(default=True)
+    is_salary_public: bool = Field(default=False)
+    
+    # Additional Compensation
+    bonus_structure: Union[str, None] = Field(default=None, max_length=200)
+    equity_offered: bool = Field(default=False)
+    commission_structure: Union[str, None] = Field(default=None, max_length=200)
+    
+    # Location Information
+    location: Union[str, None] = Field(default=None, max_length=255)
+    city: Union[str, None] = Field(default=None, max_length=100)
+    state_province: Union[str, None] = Field(default=None, max_length=100)
+    country: Union[str, None] = Field(default=None, max_length=100)
+    postal_code: Union[str, None] = Field(default=None, max_length=20)
+    office_address: Union[str, None] = Field(default=None, max_length=500)
+    
+    # Skills and Technologies
+    required_skills: Union[List[str], None] = Field(default_factory=list)
+    preferred_skills: Union[List[str], None] = Field(default_factory=list)
+    technologies: Union[List[str], None] = Field(default_factory=list)
+    programming_languages: Union[List[str], None] = Field(default_factory=list)
+    tools_software: Union[List[str], None] = Field(default_factory=list)
+    certifications: Union[List[str], None] = Field(default_factory=list)
+    
+    # Education Requirements
+    education_level: Union[str, None] = Field(default=None, max_length=50)
+    education_field: Union[str, None] = Field(default=None, max_length=100)
+    education_required: bool = Field(default=False)
+    
+    # Experience Requirements
+    years_experience_min: int = Field(default=0, ge=0)
+    years_experience_max: Union[int, None] = Field(default=None, ge=0)
+    industry_experience: Union[List[str], None] = Field(default_factory=list)
+    
+    # Application Process
+    application_deadline: Union[datetime, None] = Field(default=None)
+    application_email: Union[str, None] = Field(default=None, max_length=255)
+    application_url: Union[str, None] = Field(default=None, max_length=500)
+    application_instructions: Union[str, None] = Field(default=None)
+    contact_person: Union[str, None] = Field(default=None, max_length=255)
+    contact_phone: Union[str, None] = Field(default=None, max_length=50)
+    contact_email: Union[str, None] = Field(default=None, max_length=255)
+    
+    # Application Requirements
+    requires_cover_letter: bool = Field(default=False)
+    requires_portfolio: bool = Field(default=False)
+    requires_references: bool = Field(default=False)
+    custom_application_fields: Union[Dict[str, Any], None] = Field(default=None)
+    
+    # Hiring Process
+    hiring_process_steps: Union[List[str], None] = Field(default_factory=list)
+    estimated_hiring_time: Union[str, None] = Field(default=None, max_length=50)
+    number_of_positions: int = Field(default=1, ge=1)
+    
+    # Benefits and Perks
+    health_benefits: Union[List[str], None] = Field(default_factory=list)
+    retirement_benefits: Union[List[str], None] = Field(default_factory=list)
+    time_off_benefits: Union[List[str], None] = Field(default_factory=list)
+    professional_development: Union[List[str], None] = Field(default_factory=list)
+    workplace_perks: Union[List[str], None] = Field(default_factory=list)
+
+class EnhancedJobCreate(EnhancedJobBase):
+    company_id: UUID
+    category_id: Union[int, None] = Field(default=None)
+
+class EnhancedJob(EnhancedJobBase):
+    id: UUID
+    company_id: UUID
+    category_id: Union[int, None] = Field(default=None)
+    posted_by: Union[UUID, None] = Field(default=None)
+    recruiter_id: Union[UUID, None] = Field(default=None)
+    
+    # Job Status and Visibility
+    status: str = Field(default='active', max_length=20)
+    is_featured: bool = Field(default=False)
+    is_urgent: bool = Field(default=False)
+    is_confidential: bool = Field(default=False)
+    visibility: str = Field(default='public', max_length=20)
+    
+    # Statistics
+    view_count: int = Field(default=0, ge=0)
+    application_count: int = Field(default=0, ge=0)
+    save_count: int = Field(default=0, ge=0)
+    share_count: int = Field(default=0, ge=0)
+    
+    # Company Information (denormalized)
+    company_name: Union[str, None] = Field(default=None, max_length=255)
+    company_logo_url: Union[str, None] = Field(default=None, max_length=500)
+    company_industry: Union[str, None] = Field(default=None, max_length=100)
+    company_size: Union[str, None] = Field(default=None, max_length=50)
+    
+    # Timestamps
+    created_at: datetime
+    updated_at: Union[datetime, None] = Field(default=None)
+    published_at: Union[datetime, None] = Field(default=None)
+    expires_at: Union[datetime, None] = Field(default=None)
+    filled_at: Union[datetime, None] = Field(default=None)
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class JobApplicationCreate(BaseModel):
+    job_id: UUID
+    cover_letter: Union[str, None] = Field(default=None)
+    cv_file_path: Union[str, None] = Field(default=None, max_length=500)
+    portfolio_url: Union[str, None] = Field(default=None, max_length=500)
+    additional_documents: Union[List[str], None] = Field(default_factory=list)
+    additional_info: Union[str, None] = Field(default=None)
+    custom_responses: Union[Dict[str, Any], None] = Field(default=None)
+    
+    # Contact Information
+    applicant_email: Union[str, None] = Field(default=None, max_length=255)
+    applicant_phone: Union[str, None] = Field(default=None, max_length=50)
+    applicant_name: Union[str, None] = Field(default=None, max_length=255)
+
+class JobApplication(BaseModel):
+    id: UUID
+    job_id: UUID
+    applicant_id: UUID
+    
+    # Application Data
+    cover_letter: Union[str, None] = Field(default=None)
+    cv_file_path: Union[str, None] = Field(default=None)
+    portfolio_url: Union[str, None] = Field(default=None)
+    additional_documents: Union[List[str], None] = Field(default=None)
+    additional_info: Union[str, None] = Field(default=None)
+    custom_responses: Union[Dict[str, Any], None] = Field(default=None)
+    
+    # Contact Information
+    applicant_email: Union[str, None] = Field(default=None)
+    applicant_phone: Union[str, None] = Field(default=None)
+    applicant_name: Union[str, None] = Field(default=None)
+    
+    # Status and Tracking
+    status: str = Field(default="applied")
+    stage: Union[str, None] = Field(default=None)
+    priority: str = Field(default="normal")
+    
+    # Recruiter Information
+    recruiter_notes: Union[str, None] = Field(default=None)
+    internal_rating: Union[int, None] = Field(default=None, ge=1, le=5)
+    tags: Union[List[str], None] = Field(default=None)
+    
+    # Interview Information
+    interview_scheduled_at: Union[datetime, None] = Field(default=None)
+    interview_type: Union[str, None] = Field(default=None)
+    interview_notes: Union[str, None] = Field(default=None)
+    
+    # Decision Information
+    rejection_reason: Union[str, None] = Field(default=None)
+    offer_details: Union[Dict[str, Any], None] = Field(default=None)
+    
+    # Timestamps
+    applied_at: datetime
+    reviewed_at: Union[datetime, None] = Field(default=None)
+    interview_at: Union[datetime, None] = Field(default=None)
+    decision_at: Union[datetime, None] = Field(default=None)
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class JobAlertCreate(BaseModel):
+    alert_name: str = Field(max_length=200)
+    keywords: Union[List[str], None] = Field(default_factory=list)
+    job_title: Union[str, None] = Field(default=None, max_length=255)
+    company_name: Union[str, None] = Field(default=None, max_length=255)
+    location: Union[str, None] = Field(default=None, max_length=255)
+    remote_only: bool = Field(default=False)
+    
+    # Job Type Filters
+    job_types: Union[List[str], None] = Field(default_factory=list)
+    experience_levels: Union[List[str], None] = Field(default_factory=list)
+    salary_min: Union[Decimal, None] = Field(default=None, ge=0)
+    salary_max: Union[Decimal, None] = Field(default=None, ge=0)
+    
+    # Company Filters
+    company_sizes: Union[List[str], None] = Field(default_factory=list)
+    industries: Union[List[str], None] = Field(default_factory=list)
+    
+    # Skills and Requirements
+    required_skills: Union[List[str], None] = Field(default_factory=list)
+    excluded_skills: Union[List[str], None] = Field(default_factory=list)
+    
+    # Alert Settings
+    frequency: str = Field(default='immediate', regex='^(immediate|daily|weekly)$')
+    email_notifications: bool = Field(default=True)
+    push_notifications: bool = Field(default=True)
+
+class JobAlert(BaseModel):
+    id: UUID
+    user_id: UUID
+    alert_name: str
+    keywords: Union[List[str], None] = Field(default=None)
+    job_title: Union[str, None] = Field(default=None)
+    company_name: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    remote_only: bool
+    
+    job_types: Union[List[str], None] = Field(default=None)
+    experience_levels: Union[List[str], None] = Field(default=None)
+    salary_min: Union[Decimal, None] = Field(default=None)
+    salary_max: Union[Decimal, None] = Field(default=None)
+    
+    company_sizes: Union[List[str], None] = Field(default=None)
+    industries: Union[List[str], None] = Field(default=None)
+    
+    required_skills: Union[List[str], None] = Field(default=None)
+    excluded_skills: Union[List[str], None] = Field(default=None)
+    
+    is_active: bool
+    frequency: str
+    email_notifications: bool
+    push_notifications: bool
+    
+    matches_found: int
+    last_match_date: Union[datetime, None] = Field(default=None)
+    
+    created_at: datetime
+    updated_at: Union[datetime, None] = Field(default=None)
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class CompanyReviewCreate(BaseModel):
+    company_id: UUID
+    title: str = Field(max_length=255)
+    review_text: str
+    pros: Union[str, None] = Field(default=None)
+    cons: Union[str, None] = Field(default=None)
+    advice_to_management: Union[str, None] = Field(default=None)
+    
+    # Ratings (1-5 scale)
+    overall_rating: float = Field(ge=1.0, le=5.0)
+    culture_rating: Union[float, None] = Field(default=None, ge=1.0, le=5.0)
+    salary_rating: Union[float, None] = Field(default=None, ge=1.0, le=5.0)
+    benefits_rating: Union[float, None] = Field(default=None, ge=1.0, le=5.0)
+    management_rating: Union[float, None] = Field(default=None, ge=1.0, le=5.0)
+    career_opportunities_rating: Union[float, None] = Field(default=None, ge=1.0, le=5.0)
+    work_life_balance_rating: Union[float, None] = Field(default=None, ge=1.0, le=5.0)
+    
+    # Reviewer Information
+    job_title: Union[str, None] = Field(default=None, max_length=255)
+    employment_status: Union[str, None] = Field(default=None, max_length=50)
+    employment_duration: Union[str, None] = Field(default=None, max_length=50)
+    department: Union[str, None] = Field(default=None, max_length=100)
+    location: Union[str, None] = Field(default=None, max_length=255)
+    
+    is_anonymous: bool = Field(default=True)
+
+class CompanyReview(BaseModel):
+    id: UUID
+    company_id: UUID
+    reviewer_id: UUID
+    title: str
+    review_text: str
+    pros: Union[str, None] = Field(default=None)
+    cons: Union[str, None] = Field(default=None)
+    advice_to_management: Union[str, None] = Field(default=None)
+    
+    overall_rating: float
+    culture_rating: Union[float, None] = Field(default=None)
+    salary_rating: Union[float, None] = Field(default=None)
+    benefits_rating: Union[float, None] = Field(default=None)
+    management_rating: Union[float, None] = Field(default=None)
+    career_opportunities_rating: Union[float, None] = Field(default=None)
+    work_life_balance_rating: Union[float, None] = Field(default=None)
+    
+    job_title: Union[str, None] = Field(default=None)
+    employment_status: Union[str, None] = Field(default=None)
+    employment_duration: Union[str, None] = Field(default=None)
+    department: Union[str, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    
+    is_verified: bool
+    is_anonymous: bool
+    is_approved: bool
+    
+    helpful_count: int
+    not_helpful_count: int
+    
+    created_at: datetime
+    updated_at: Union[datetime, None] = Field(default=None)
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class SalaryReportCreate(BaseModel):
+    company_id: UUID
+    job_title: str = Field(max_length=255)
+    department: Union[str, None] = Field(default=None, max_length=100)
+    experience_level: Union[str, None] = Field(default=None, max_length=50)
+    years_experience: Union[int, None] = Field(default=None, ge=0)
+    years_at_company: Union[int, None] = Field(default=None, ge=0)
+    
+    location: Union[str, None] = Field(default=None, max_length=255)
+    city: Union[str, None] = Field(default=None, max_length=100)
+    country: Union[str, None] = Field(default=None, max_length=100)
+    
+    base_salary: Decimal = Field(ge=0)
+    bonus: Union[Decimal, None] = Field(default=None, ge=0)
+    stock_options: Union[Decimal, None] = Field(default=None, ge=0)
+    other_compensation: Union[Decimal, None] = Field(default=None, ge=0)
+    currency: str = Field(default='NOK', max_length=3)
+    
+    employment_type: Union[str, None] = Field(default=None, max_length=50)
+    work_arrangement: Union[str, None] = Field(default=None, max_length=50)
+    
+    education_level: Union[str, None] = Field(default=None, max_length=50)
+    skills: Union[List[str], None] = Field(default_factory=list)
+    certifications: Union[List[str], None] = Field(default_factory=list)
+
+class SalaryReport(BaseModel):
+    id: UUID
+    company_id: UUID
+    reporter_id: Union[UUID, None] = Field(default=None)
+    
+    job_title: str
+    department: Union[str, None] = Field(default=None)
+    experience_level: Union[str, None] = Field(default=None)
+    years_experience: Union[int, None] = Field(default=None)
+    years_at_company: Union[int, None] = Field(default=None)
+    
+    location: Union[str, None] = Field(default=None)
+    city: Union[str, None] = Field(default=None)
+    country: Union[str, None] = Field(default=None)
+    
+    base_salary: Decimal
+    bonus: Union[Decimal, None] = Field(default=None)
+    stock_options: Union[Decimal, None] = Field(default=None)
+    other_compensation: Union[Decimal, None] = Field(default=None)
+    total_compensation: Union[Decimal, None] = Field(default=None)
+    currency: str
+    
+    employment_type: Union[str, None] = Field(default=None)
+    work_arrangement: Union[str, None] = Field(default=None)
+    
+    education_level: Union[str, None] = Field(default=None)
+    skills: Union[List[str], None] = Field(default=None)
+    certifications: Union[List[str], None] = Field(default=None)
+    
+    is_verified: bool
+    verification_method: Union[str, None] = Field(default=None)
+    
+    created_at: datetime
+    
+    model_config = ConfigDict(from_attributes=True)
+
+class AdvancedJobSearchFilters(BaseModel):
+    # Basic filters
+    keywords: Union[str, None] = Field(default=None, max_length=200)
+    job_title: Union[str, None] = Field(default=None, max_length=255)
+    company_name: Union[str, None] = Field(default=None, max_length=255)
+    location: Union[str, None] = Field(default=None, max_length=255)
+    remote_only: bool = Field(default=False)
+    
+    # Job classification
+    job_types: Union[List[str], None] = Field(default_factory=list)
+    experience_levels: Union[List[str], None] = Field(default_factory=list)
+    departments: Union[List[str], None] = Field(default_factory=list)
+    
+    # Salary filters
+    salary_min: Union[Decimal, None] = Field(default=None, ge=0)
+    salary_max: Union[Decimal, None] = Field(default=None, ge=0)
+    salary_currency: str = Field(default='NOK', max_length=3)
+    
+    # Company filters
+    company_sizes: Union[List[str], None] = Field(default_factory=list)
+    industries: Union[List[str], None] = Field(default_factory=list)
+    company_rating_min: Union[float, None] = Field(default=None, ge=1.0, le=5.0)
+    
+    # Skills and requirements
+    required_skills: Union[List[str], None] = Field(default_factory=list)
+    preferred_skills: Union[List[str], None] = Field(default_factory=list)
+    technologies: Union[List[str], None] = Field(default_factory=list)
+    programming_languages: Union[List[str], None] = Field(default_factory=list)
+    
+    # Education and experience
+    education_levels: Union[List[str], None] = Field(default_factory=list)
+    years_experience_min: Union[int, None] = Field(default=None, ge=0)
+    years_experience_max: Union[int, None] = Field(default=None, ge=0)
+    
+    # Work arrangement
+    work_arrangements: Union[List[str], None] = Field(default_factory=list)
+    remote_work_percentage_min: Union[int, None] = Field(default=None, ge=0, le=100)
+    
+    # Benefits and perks
+    health_benefits: Union[List[str], None] = Field(default_factory=list)
+    workplace_perks: Union[List[str], None] = Field(default_factory=list)
+    
+    # Job status
+    include_expired: bool = Field(default=False)
+    featured_only: bool = Field(default=False)
+    urgent_only: bool = Field(default=False)
+    
+    # Date filters
+    posted_after: Union[datetime, None] = Field(default=None)
+    posted_before: Union[datetime, None] = Field(default=None)
+    
+    # Sorting
+    sort_by: str = Field(default='created_at', regex='^(created_at|salary_min|view_count|application_count|relevance)$')
+    sort_order: str = Field(default='desc', regex='^(asc|desc)$')
+    
+    # Pagination
+    page: int = Field(default=1, ge=1)
+    limit: int = Field(default=20, ge=1, le=100)

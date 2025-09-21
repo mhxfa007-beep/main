@@ -1,6 +1,6 @@
 # property-service/src/models/holiday_rental_schemas.py
-from pydantic import BaseModel, validator, EmailStr
-from typing import List, Optional, Dict, Any
+from pydantic import BaseModel, validator, EmailStr, Field
+from typing import List, Union, Dict, Any
 from datetime import datetime, date
 from decimal import Decimal
 from uuid import UUID
@@ -41,17 +41,17 @@ class HolidayRentalBase(BaseModel):
     rental_type: HolidayRentalTypeEnum
     max_guests: int
     min_nights: int = 1
-    max_nights: Optional[int] = None
+    max_nights: Union[int, None] = Field(default=None)
     price_per_night: Decimal
     cleaning_fee: Decimal = 0
     security_deposit: Decimal = 0
     extra_guest_fee: Decimal = 0
     pet_fee: Decimal = 0
-    summer_price_per_night: Optional[Decimal] = None
-    winter_price_per_night: Optional[Decimal] = None
+    summer_price_per_night: Union[Decimal, None] = Field(default=None)
+    winter_price_per_night: Union[Decimal, None] = Field(default=None)
     weekend_surcharge: Decimal = 0
     holiday_surcharge: Decimal = 0
-    available_seasons: Optional[str] = None
+    available_seasons: Union[str, None] = Field(default=None)
     check_in_time: str = "15:00"
     check_out_time: str = "11:00"
     instant_booking: bool = False
@@ -79,10 +79,10 @@ class HolidayRentalBase(BaseModel):
     children_welcome: bool = True
     
     # Location Features
-    distance_to_water: Optional[float] = None
-    distance_to_ski_lift: Optional[float] = None
-    distance_to_town_center: Optional[float] = None
-    distance_to_grocery_store: Optional[float] = None
+    distance_to_water: Union[float, None] = Field(default=None)
+    distance_to_ski_lift: Union[float, None] = Field(default=None)
+    distance_to_town_center: Union[float, None] = Field(default=None)
+    distance_to_grocery_store: Union[float, None] = Field(default=None)
     
     # Booking Policies
     cancellation_policy: CancellationPolicyEnum = CancellationPolicyEnum.MODERATE
@@ -110,56 +110,56 @@ class HolidayRentalCreate(HolidayRentalBase):
     property_id: UUID
 
 class HolidayRentalUpdate(BaseModel):
-    rental_type: Optional[HolidayRentalTypeEnum] = None
-    max_guests: Optional[int] = None
-    min_nights: Optional[int] = None
-    max_nights: Optional[int] = None
-    price_per_night: Optional[Decimal] = None
-    cleaning_fee: Optional[Decimal] = None
-    security_deposit: Optional[Decimal] = None
-    extra_guest_fee: Optional[Decimal] = None
-    pet_fee: Optional[Decimal] = None
-    summer_price_per_night: Optional[Decimal] = None
-    winter_price_per_night: Optional[Decimal] = None
-    weekend_surcharge: Optional[Decimal] = None
-    holiday_surcharge: Optional[Decimal] = None
-    available_seasons: Optional[str] = None
-    check_in_time: Optional[str] = None
-    check_out_time: Optional[str] = None
-    instant_booking: Optional[bool] = None
+    rental_type: Union[HolidayRentalTypeEnum, None] = Field(default=None)
+    max_guests: Union[int, None] = Field(default=None)
+    min_nights: Union[int, None] = Field(default=None)
+    max_nights: Union[int, None] = Field(default=None)
+    price_per_night: Union[Decimal, None] = Field(default=None)
+    cleaning_fee: Union[Decimal, None] = Field(default=None)
+    security_deposit: Union[Decimal, None] = Field(default=None)
+    extra_guest_fee: Union[Decimal, None] = Field(default=None)
+    pet_fee: Union[Decimal, None] = Field(default=None)
+    summer_price_per_night: Union[Decimal, None] = Field(default=None)
+    winter_price_per_night: Union[Decimal, None] = Field(default=None)
+    weekend_surcharge: Union[Decimal, None] = Field(default=None)
+    holiday_surcharge: Union[Decimal, None] = Field(default=None)
+    available_seasons: Union[str, None] = Field(default=None)
+    check_in_time: Union[str, None] = Field(default=None)
+    check_out_time: Union[str, None] = Field(default=None)
+    instant_booking: Union[bool, None] = Field(default=None)
     
     # Amenities
-    has_wifi: Optional[bool] = None
-    has_kitchen: Optional[bool] = None
-    has_washing_machine: Optional[bool] = None
-    has_dishwasher: Optional[bool] = None
-    has_tv: Optional[bool] = None
-    has_heating: Optional[bool] = None
-    has_air_conditioning: Optional[bool] = None
-    has_hot_tub: Optional[bool] = None
-    has_sauna: Optional[bool] = None
-    has_fireplace: Optional[bool] = None
-    has_bbq: Optional[bool] = None
-    has_boat_access: Optional[bool] = None
-    has_ski_access: Optional[bool] = None
-    has_beach_access: Optional[bool] = None
+    has_wifi: Union[bool, None] = Field(default=None)
+    has_kitchen: Union[bool, None] = Field(default=None)
+    has_washing_machine: Union[bool, None] = Field(default=None)
+    has_dishwasher: Union[bool, None] = Field(default=None)
+    has_tv: Union[bool, None] = Field(default=None)
+    has_heating: Union[bool, None] = Field(default=None)
+    has_air_conditioning: Union[bool, None] = Field(default=None)
+    has_hot_tub: Union[bool, None] = Field(default=None)
+    has_sauna: Union[bool, None] = Field(default=None)
+    has_fireplace: Union[bool, None] = Field(default=None)
+    has_bbq: Union[bool, None] = Field(default=None)
+    has_boat_access: Union[bool, None] = Field(default=None)
+    has_ski_access: Union[bool, None] = Field(default=None)
+    has_beach_access: Union[bool, None] = Field(default=None)
     
     # Policies
-    pets_allowed: Optional[bool] = None
-    smoking_allowed: Optional[bool] = None
-    parties_allowed: Optional[bool] = None
-    children_welcome: Optional[bool] = None
+    pets_allowed: Union[bool, None] = Field(default=None)
+    smoking_allowed: Union[bool, None] = Field(default=None)
+    parties_allowed: Union[bool, None] = Field(default=None)
+    children_welcome: Union[bool, None] = Field(default=None)
     
     # Location Features
-    distance_to_water: Optional[float] = None
-    distance_to_ski_lift: Optional[float] = None
-    distance_to_town_center: Optional[float] = None
-    distance_to_grocery_store: Optional[float] = None
+    distance_to_water: Union[float, None] = Field(default=None)
+    distance_to_ski_lift: Union[float, None] = Field(default=None)
+    distance_to_town_center: Union[float, None] = Field(default=None)
+    distance_to_grocery_store: Union[float, None] = Field(default=None)
     
     # Booking Policies
-    cancellation_policy: Optional[CancellationPolicyEnum] = None
-    advance_booking_days: Optional[int] = None
-    is_active: Optional[bool] = None
+    cancellation_policy: Union[CancellationPolicyEnum, None] = Field(default=None)
+    advance_booking_days: Union[int, None] = Field(default=None)
+    is_active: Union[bool, None] = Field(default=None)
 
 class HolidayRentalResponse(HolidayRentalBase):
     id: UUID
@@ -187,8 +187,8 @@ class HolidayRentalBookingBase(BaseModel):
     pets: int = 0
     guest_name: str
     guest_email: EmailStr
-    guest_phone: Optional[str] = None
-    special_requests: Optional[str] = None
+    guest_phone: Union[str, None] = Field(default=None)
+    special_requests: Union[str, None] = Field(default=None)
 
     @validator('check_out_date')
     def validate_dates(cls, v, values):
@@ -217,11 +217,11 @@ class HolidayRentalBookingResponse(HolidayRentalBookingBase):
     total_price: Decimal
     status: BookingStatusEnum
     payment_status: str
-    confirmation_code: Optional[str]
+    confirmation_code: Union[str, None] = Field(default="")
     created_at: datetime
     updated_at: datetime
-    confirmed_at: Optional[datetime]
-    cancelled_at: Optional[datetime]
+    confirmed_at: Union[datetime, None] = Field(default=None)
+    cancelled_at: Union[datetime, None] = Field(default=None)
     
     class Config:
         from_attributes = True
@@ -236,14 +236,14 @@ class HolidayRentalBookingListResponse(BaseModel):
 # Review Schemas
 class HolidayRentalReviewBase(BaseModel):
     rating: int
-    title: Optional[str] = None
-    comment: Optional[str] = None
-    cleanliness_rating: Optional[int] = None
-    location_rating: Optional[int] = None
-    value_rating: Optional[int] = None
-    communication_rating: Optional[int] = None
-    check_in_rating: Optional[int] = None
-    accuracy_rating: Optional[int] = None
+    title: Union[str, None] = Field(default=None)
+    comment: Union[str, None] = Field(default=None)
+    cleanliness_rating: Union[int, None] = Field(default=None)
+    location_rating: Union[int, None] = Field(default=None)
+    value_rating: Union[int, None] = Field(default=None)
+    communication_rating: Union[int, None] = Field(default=None)
+    check_in_rating: Union[int, None] = Field(default=None)
+    accuracy_rating: Union[int, None] = Field(default=None)
 
     @validator('rating')
     def validate_rating(cls, v):
@@ -272,10 +272,10 @@ class HolidayRentalAvailabilityBase(BaseModel):
     start_date: date
     end_date: date
     is_available: bool = True
-    price_per_night: Optional[Decimal] = None
-    min_nights: Optional[int] = None
-    reason: Optional[str] = None
-    notes: Optional[str] = None
+    price_per_night: Union[Decimal, None] = Field(default=None)
+    min_nights: Union[int, None] = Field(default=None)
+    reason: Union[str, None] = Field(default=None)
+    notes: Union[str, None] = Field(default=None)
 
     @validator('end_date')
     def validate_dates(cls, v, values):
@@ -297,32 +297,32 @@ class HolidayRentalAvailabilityResponse(HolidayRentalAvailabilityBase):
 
 # Search and Filter Schemas
 class HolidayRentalSearchFilters(BaseModel):
-    rental_type: Optional[List[HolidayRentalTypeEnum]] = None
-    min_guests: Optional[int] = None
-    max_guests: Optional[int] = None
-    price_from: Optional[Decimal] = None
-    price_to: Optional[Decimal] = None
-    check_in_date: Optional[date] = None
-    check_out_date: Optional[date] = None
-    min_nights: Optional[int] = None
-    max_nights: Optional[int] = None
-    location: Optional[str] = None
-    has_wifi: Optional[bool] = None
-    has_kitchen: Optional[bool] = None
-    has_hot_tub: Optional[bool] = None
-    has_sauna: Optional[bool] = None
-    has_boat_access: Optional[bool] = None
-    has_ski_access: Optional[bool] = None
-    has_beach_access: Optional[bool] = None
-    pets_allowed: Optional[bool] = None
-    instant_booking: Optional[bool] = None
-    min_rating: Optional[Decimal] = None
+    rental_type: Union[List[HolidayRentalTypeEnum], None] = Field(default_factory=list)
+    min_guests: Union[int, None] = Field(default=None)
+    max_guests: Union[int, None] = Field(default=None)
+    price_from: Union[Decimal, None] = Field(default=None)
+    price_to: Union[Decimal, None] = Field(default=None)
+    check_in_date: Union[date, None] = Field(default=None)
+    check_out_date: Union[date, None] = Field(default=None)
+    min_nights: Union[int, None] = Field(default=None)
+    max_nights: Union[int, None] = Field(default=None)
+    location: Union[str, None] = Field(default=None)
+    has_wifi: Union[bool, None] = Field(default=None)
+    has_kitchen: Union[bool, None] = Field(default=None)
+    has_hot_tub: Union[bool, None] = Field(default=None)
+    has_sauna: Union[bool, None] = Field(default=None)
+    has_boat_access: Union[bool, None] = Field(default=None)
+    has_ski_access: Union[bool, None] = Field(default=None)
+    has_beach_access: Union[bool, None] = Field(default=None)
+    pets_allowed: Union[bool, None] = Field(default=None)
+    instant_booking: Union[bool, None] = Field(default=None)
+    min_rating: Union[Decimal, None] = Field(default=None)
 
 class HolidayRentalSearchRequest(BaseModel):
-    query: Optional[str] = None
-    filters: Optional[HolidayRentalSearchFilters] = None
-    sort_by: Optional[str] = "created_at"
-    sort_order: Optional[str] = "desc"
+    query: Union[str, None] = Field(default=None)
+    filters: Union[HolidayRentalSearchFilters, None] = Field(default=None)
+    sort_by: Union[str, None] = Field(default="created_at")
+    sort_order: Union[str, None] = Field(default="desc")
     page: int = 1
     per_page: int = 20
 
